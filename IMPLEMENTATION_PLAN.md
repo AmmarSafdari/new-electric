@@ -10,129 +10,183 @@
 
 ---
 
-## Phase 1 — Core ecommerce
+## Phase 1 — Core ecommerce ✅ COMPLETE
 
-### 1. Laravel scaffold + env + README
-- [ ] 1a. `composer create-project laravel/laravel new-electric` — init git, commit baseline
-- [ ] 1b. Install Filament v3 (`composer require filament/filament:"^3.0"` + `php artisan filament:install --panels`)
-- [ ] 1c. Install Tailwind CSS + Alpine.js via npm (Vite)
-- [ ] 1d. Create `.env.example` (DB, APP_URL, no secrets) + update README with local setup steps
-- **Verify:** `php artisan about` runs clean; visit `/admin` → Filament login screen
+### 1. Laravel scaffold + env + README ✅
+- [x] 1a. `composer create-project laravel/laravel new-electric` — init git, commit baseline
+- [x] 1b. Install Filament v3 + `php artisan filament:install --panels`
+- [x] 1c. Install Tailwind CSS + Alpine.js via npm (Vite)
+- [x] 1d. Create `.env.example` + update README with local setup steps
+- **Verify:** `php artisan about` runs clean; visit `/admin` → Filament login screen ✅
 
-### 2. Migrations
-- [ ] 2a. `categories`: id, name, slug, description, image, timestamps
-- [ ] 2b. `brands`: id, name, slug, logo, timestamps
-- [ ] 2c. `products`: id, category_id (FK), brand_id (FK nullable), title, slug, sku (unique), price (decimal 10,2), stock_qty (int default 0), images (JSON), description (text), specs (JSON nullable), warranty (string nullable), is_featured (bool default false), timestamps
-- [ ] 2d. `orders`: id, name, phone, city, address, notes, subtotal, shipping_fee, total, status (enum: pending/confirmed/processing/shipped/delivered/cancelled), payment_method (default 'cod'), timestamps
-- [ ] 2e. `order_items`: id, order_id (FK cascade), product_id (FK), title (snapshot), sku (snapshot), unit_price (decimal), qty (int), line_total (decimal), timestamps
-- **Verify:** `php artisan migrate:fresh` runs with zero errors; inspect tables in MySQL
+### 2. Migrations ✅
+- [x] 2a. `categories` table
+- [x] 2b. `brands` table
+- [x] 2c. `products` table (including flash sale columns: sale_price, is_on_sale, sale_ends_at)
+- [x] 2d. `orders` table
+- [x] 2e. `order_items` table
+- **Verify:** `php artisan migrate:fresh` runs with zero errors ✅
 
-### 3. Seeders
-- [ ] 3a. `CategorySeeder` — 8 rows: Batteries, Standing Fans, Plugs, Extension Boards, Adapters, Bulbs & Lights, Emergency Lights, Wires
-- [ ] 3b. `BrandSeeder` — 5 rows: Sogo, SuperAsia, Philips, Panasonic, Local Generic
-- [ ] 3c. `ProductSeeder` — 16 products across categories; realistic PKR prices; varied stock qtys; `is_featured` on 4
-- **Verify:** `php artisan db:seed` succeeds; `php artisan tinker --execute="echo \App\Models\Product::count();"` prints 16
+### 3. Seeders ✅
+- [x] 3a. `CategorySeeder` — 8 rows
+- [x] 3b. `BrandSeeder` — 5 rows
+- [x] 3c. `ProductSeeder` — 16 products (4 featured, 4 on flash sale)
+- **Verify:** `Product::count()` = 16 ✅
 
-### 4. Filament admin resources
-- [ ] 4a. `CategoryResource`: table (name, slug, actions), create/edit form (name → auto-slug, description, image upload)
-- [ ] 4b. `BrandResource`: table (name, slug), create/edit form
-- [ ] 4c. `ProductResource`: table (title, sku, category, price PKR, stock, featured badge); search by title/sku; filter by category/brand; form with all product fields + image upload (multiple)
-- [ ] 4d. `OrderResource`: table (order#, customer name, total, status badge, date); filter by status; detail view with order items (read-only); edit status (select + save)
-- **Verify:** CRUD each resource in browser; create product → appears in list; change order status → DB updated
+### 4. Filament admin resources ✅
+- [x] 4a. `CategoryResource`
+- [x] 4b. `BrandResource`
+- [x] 4c. `ProductResource` (with flash sale section, TernaryFilter)
+- [x] 4d. `OrderResource` (infolist view, status edit, cancel action)
+- **Verify:** CRUD each resource in browser ✅
 
-### 5. Storefront pages
-- [ ] 5a. `AppLayout`: sticky header (logo, categories nav, search icon, cart icon + count), footer (links, address, socials placeholder)
-- [ ] 5b. Home: hero section placeholder (static for now, animation in Phase 3), 8 category cards, featured products grid (4)
-- [ ] 5c. Category listing: breadcrumb, product grid (3–4 cols), filter sidebar (brand checkboxes, Alpine.js, no page reload)
-- [ ] 5d. Product detail: image gallery (main + thumbs, Alpine.js), price PKR, stock badge, description tab, specs tab, warranty, "Add to Cart" button
-- [ ] 5e. Search results: `?q=` param, product grid or "no results" message, heading shows query
-- **Verify:** Navigate all pages; products/categories display correctly; search for "fan" returns fan products
+### 5. Storefront pages ✅
+- [x] 5a. `AppLayout` (sticky header, flash sale banner, cart badge, footer)
+- [x] 5b. Home (hero + categories + featured products + flash sale section)
+- [x] 5c. Category listing (brand filter sidebar)
+- [x] 5d. Product detail (image gallery + tabs + add to cart)
+- [x] 5e. Search results
+- **Verify:** All pages navigable; search works ✅
 
-### 6. Cart (session-based)
-- [ ] 6a. `CartService`: `add(productId, qty)`, `update(productId, qty)`, `remove(productId)`, `clear()`, `items()`, `total()`, `count()` — stored in `session('cart')`
-- [ ] 6b. Routes + `CartController`: POST `/cart/add`, PATCH `/cart/update`, DELETE `/cart/remove`, GET `/cart`
-- [ ] 6c. Cart page: table of items (image, title, qty spinner with Alpine.js +/−, line total, remove), order subtotal + shipping (flat PKR 200), grand total, "Checkout" button
-- [ ] 6d. Header cart icon: Alpine.js x-data reads cart count from meta tag set by controller; no page reload needed
-- **Verify:** Add product → count +1 in header; change qty → subtotal updates; remove → item gone; refresh → cart still there (session persisted)
+### 6. Cart (session-based) ✅
+- [x] 6a. `CartService`: add/update/remove/clear/items/total/count
+- [x] 6b. Routes + `CartController`
+- [x] 6c. Cart page (qty spinner, line totals, shipping, grand total)
+- [x] 6d. Header cart badge
+- **Verify:** Add → count +1; change qty → subtotal updates; refresh → persists ✅
 
-### 7. Checkout + order creation + success
-- [ ] 7a. `CheckoutController`: `show()` (GET `/checkout`) and `store()` (POST `/checkout`)
-- [ ] 7b. Checkout form: Name, Phone (Pakistan +92 or 03xx), City (text), Street address, Order notes (optional); right sidebar: order summary with line items + totals; COD badge ("Pay on Delivery")
-- [ ] 7c. Order creation in `store()`: validate → DB transaction → create Order → create OrderItems → **decrement stock_qty** on each product → clear cart → redirect to success
-- [ ] 7d. Order success page: "Order Placed!" heading, order number, summary table, estimated delivery note, "Continue Shopping" button
-- **Verify:** Submit valid checkout → order in DB; `product->stock_qty` decremented; cart empty after; success page shows correct order number
+### 7. Checkout + order creation ✅
+- [x] 7a. `CheckoutController` show() + store()
+- [x] 7b. Checkout form (name, phone, city, address, notes, order summary)
+- [x] 7c. Order creation: validate → DB transaction → Order + OrderItems → decrement stock → clear cart → redirect
+- [x] 7d. Order success page
+- **Verify:** Submit → order in DB; stock decremented; cart empty ✅
 
-### 8. Order status management + stock restore on cancel
-- [ ] 8a. `OrderResource` status actions: buttons in detail view — "Confirm", "Mark Shipped", "Mark Delivered", "Cancel"
-- [ ] 8b. Cancel logic: Observer or service — when status → `cancelled`, restore `stock_qty` for each order item
-- [ ] 8c. Feature test: `OrderCancelRestoresStockTest` — create order with qty, cancel, assert stock restored
-- **Verify:** Cancel order in admin → stock_qty restored; `php artisan test` passes including new test
+### 8. Order cancel + stock restore ✅
+- [x] 8a. OrderResource cancel action
+- [x] 8b. OrderObserver: cancelled → restore stock_qty
+- [ ] 8c. **Feature test `OrderCancelRestoresStockTest`** *(1 hour)*
+  - Create product with stock=10, place order qty=3, cancel → assert stock=10
+  - `php artisan test --filter=OrderCancelRestoresStockTest` passes
+  - **Verify:** `php artisan test` passes including this test
 
 ---
 
 ## Phase 2 — Import/export
 
-### 9. CSV importer command
-- [ ] 9a. Create `storage/app/csv/products_sample.csv` with columns: sku, title, category_slug, brand_slug, price, stock_qty, description, warranty, is_featured
-- [ ] 9b. Artisan command `php artisan import:products {file}`: read CSV, upsert by SKU (create or update), resolve category/brand by slug, log results
-- **Verify:** Run with sample CSV → 16 rows upserted; run again → no duplicates; `Product::count()` unchanged
+### 9. CSV importer command ✅
+- [x] 9a. `storage/app/csv/products_sample.csv`
+- [x] 9b. `php artisan import:products {file}` — upsert by SKU
+- **Verify:** Run with sample CSV → no duplicates ✅
 
 ### 10. Filament import/export UI
-- [ ] 10a. Add import action on `ProductResource` table: upload CSV file → trigger import logic → flash success/error count
-- [ ] 10b. Add export action: download `products_export.csv` with all current products
-- **Verify:** Upload CSV in admin → products appear in list; download export → open in Excel, all columns correct
+
+- [ ] 10a. **Add ImportAction to ProductResource** *(1–2 hours)*
+  - Use Filament's built-in `ImportAction` or custom modal with file upload
+  - On submit: call existing `import:products` logic (reuse service/command)
+  - Flash count: "Imported 12, updated 4, skipped 0"
+  - **Verify:** Upload `products_sample.csv` in admin → products in list; flash message shows counts
+
+- [ ] 10b. **Add ExportAction to ProductResource** *(1 hour)*
+  - Download `products_export_{date}.csv` with columns: sku, title, category_slug, brand_slug, price, stock_qty, sale_price, is_on_sale, description, warranty, is_featured
+  - **Verify:** Click Export → CSV downloads; open in Excel → all products, correct columns, no empty rows
 
 ---
 
-## Phase 3 — Homepage animation ("Room Power-Up")
+## Phase 3 — Homepage animation ("Room Power-Up") ✅ COMPLETE
 
-### 11. SVG room scene
-- [ ] 11a. Create `resources/svg/room-scene.svg`: outlines of a simple room with: `#bulb` group, `#fan-blades` group, `#led-strip` rect, `#wall-switch` group — all initially in "off" state (dark/muted)
-- [ ] 11b. Inline the SVG in `home.blade.php` hero section, wrapped in `<div id="room-animation-hero">`
-- **Verify:** Open home page → SVG visible; inspect DOM → IDs `#bulb`, `#fan-blades`, `#led-strip`, `#wall-switch` present
+### 11. SVG room scene ✅
+- [x] 11a. `resources/views/partials/room-svg.blade.php` with `#bulb`, `#fan-blades`, `#led-strip`, `#wall-switch`
+- [x] 11b. Inlined in `home.blade.php` hero section
+- **Verify:** IDs present in DOM ✅
 
-### 12. GSAP ScrollTrigger animation
-- [ ] 12a. `npm install gsap`; import in `resources/js/animation.js`
-- [ ] 12b. Timeline: pin `#room-animation-hero` for 1.5 scroll screens → bulb: opacity + drop-shadow glow → fan: rotation 0→360 (repeat) → LED: clipPath reveal left-to-right → switch: translateX toggle
-- [ ] 12c. "Skip Animation" link (`<a href="#products-section">Skip</a>`) visible immediately top-right of hero, scrolls past pinned zone
-- [ ] 12d. "Shop Now" CTA button overlaid on hero, visible without scrolling, links to `#products-section`
-- **Verify:** Scroll triggers each element in sequence; Shop Now visible on load; Skip link jumps to products; animation ends and page flows normally
+### 12. GSAP ScrollTrigger animation ✅
+- [x] 12a. `npm install gsap`; `resources/js/animation.js`
+- [x] 12b. Pinned timeline: bulb glow → fan spin → LED reveal → switch toggle
+- [x] 12c. "Skip Animation" link
+- [x] 12d. "Shop Now" CTA
+- **Verify:** Scroll triggers sequence; skip link works ✅
 
-### 13. Reduced motion + mobile guardrails
-- [ ] 13a. In `animation.js`: check `window.matchMedia('(prefers-reduced-motion: reduce)').matches` → if true, skip GSAP, apply single CSS fade-in class to hero instead
-- [ ] 13b. Mobile guard: if `window.innerWidth < 768` → skip ScrollTrigger pin, just do a simple stagger fade-in for room elements
-- [ ] 13c. Defer `animation.js` load (`<script defer>`) so it never blocks first paint
-- **Verify:** DevTools → Rendering → "Emulate CSS media feature prefers-reduced-motion: reduce" → no animation, static hero; resize to 375px → no layout jank; Lighthouse performance score ≥ 70
+### 13. Reduced motion + mobile guardrails ✅
+- [x] 13a. `prefers-reduced-motion` check → skip GSAP, apply CSS fade
+- [x] 13b. Mobile guard (`< 768px`) → stagger fade only
+- [x] 13c. `<script defer>` on animation.js
+- **Verify:** Emulate reduced-motion → static hero; 375px → no jank ✅
 
 ---
 
 ## Phase 4 — Production hardening + deploy
 
 ### 14. SEO
-- [ ] 14a. `AppLayout`: `@stack('meta')` slot; default meta description and OG tags
-- [ ] 14b. Product detail: `@push('meta')` with product title, description (first 160 chars), OG image (first product image)
-- [ ] 14c. `/sitemap.xml` route: lists home, all category URLs, all product URLs with `<lastmod>`
-- [ ] 14d. `public/robots.txt`: `Disallow: /admin`
-- **Verify:** View source on product page → correct OG tags; visit `/sitemap.xml` → valid XML; `/robots.txt` → disallows /admin
+
+- [ ] 14a. **Meta stack in AppLayout** *(1 hour)*
+  - Add `@stack('meta')` in `<head>`
+  - Default: `<meta name="description">` (site tagline), OG title, OG type=website, OG URL
+  - **Verify:** View source on `/` → meta description and OG tags present
+
+- [ ] 14b. **Product detail meta push** *(30 min)*
+  - `@push('meta')`: title = product name, description = first 160 chars of description, OG image = first product image URL
+  - **Verify:** View source on any product page → correct OG tags matching that product
+
+- [ ] 14c. **Sitemap + robots** *(already done — verify only)*
+  - Confirm `/sitemap.xml` valid XML with home + category + product URLs
+  - Confirm `/robots.txt` has `Disallow: /admin`
+  - **Verify:** Both URLs accessible and correct ✅
 
 ### 15. Performance
-- [ ] 15a. All `<img>` tags: add `loading="lazy"` except first above-fold image (hero/logo)
-- [ ] 15b. `npm run build` → check bundle; no chunk > 200KB (GSAP is ~90KB, acceptable)
-- [ ] 15c. Add caching commands to deploy checklist: `route:cache`, `config:cache`, `view:cache`
-- **Verify:** Lighthouse mobile performance ≥ 70; no render-blocking resources beyond Vite entry
+
+- [ ] 15a. **Lazy-load images** *(30 min)*
+  - Add `loading="lazy"` to all `<img>` in product cards, category cards, product detail thumbs
+  - Keep hero/logo images without lazy (above fold)
+  - **Verify:** DevTools Network → images below fold have `loading="lazy"` attribute
+
+- [ ] 15b. **Bundle size check** *(30 min)*
+  - `npm run build` → confirm no JS chunk > 200KB
+  - If any chunk > 200KB: dynamic import the offending module
+  - **Verify:** Build output shows all chunks within limits (GSAP ~90KB is acceptable)
 
 ### 16. Security
-- [ ] 16a. `CheckoutRequest` Form Request: name (required, max 100), phone (required, regex `/^(\+92|03)\d{9}$/`), city (required), address (required, max 300)
-- [ ] 16b. Rate limit checkout POST: add `throttle:5,1` middleware on checkout route
-- [ ] 16c. Audit all Blade views: no `{!! !!}` on user-supplied data; CSRF `@csrf` on every form
-- **Verify:** Submit empty form → validation errors shown inline; submit 6 times in 1 min → 429 response; no XSS: `<script>alert(1)</script>` in name field → escaped in output
+
+- [ ] 16a. **`CheckoutRequest` Form Request** *(1 hour)*
+  - Create `app/Http/Requests/CheckoutRequest.php`
+  - Rules: name (required, string, max:100), phone (required, regex:`/^(\+92|03)\d{9}$/`), city (required, string), address (required, string, max:300), notes (nullable, string, max:500)
+  - Use in `CheckoutController::store()` instead of manual `$request->validate()`
+  - **Verify:** Submit empty form → each field shows inline validation error; invalid phone `12345` → phone error shown
+
+- [ ] 16b. **Rate limit checkout** *(15 min)*
+  - Add `throttle:5,1` middleware on `POST /checkout` route in `routes/web.php`
+  - **Verify:** Submit checkout 6 times in 1 minute → 6th returns 429 response
+
+- [ ] 16c. **CSRF + XSS audit** *(30 min)*
+  - Grep all Blade views for `{!! !!}` — verify none used on user-supplied data
+  - Verify `@csrf` present in cart form, checkout form, any POST forms
+  - **Verify:** `<script>alert(1)</script>` in name field at checkout → escaped in order detail, not executed
 
 ### 17. DEPLOY_HOSTINGER.md
-- [ ] 17a. Prerequisites section: PHP 8.1+, MySQL, Composer, Node (optional for build), Git
-- [ ] 17b. Upload & install: git clone or FTP upload, `composer install --no-dev --optimize-autoloader`, copy `.env.example` to `.env`, fill DB creds + APP_URL
-- [ ] 17c. Post-install commands: `php artisan key:generate`, `php artisan migrate --seed`, `php artisan storage:link`, `php artisan config:cache`, `php artisan route:cache`, `php artisan view:cache`
-- [ ] 17d. Verification checklist: visit `/`, visit `/admin` (login works), add to cart, place test COD order, confirm stock decremented in admin, check `/sitemap.xml`
-- **Verify:** Developer follows doc from scratch on a clean Hostinger instance → site works
+
+- [ ] 17a. **Prerequisites section** *(30 min)*
+  - PHP 8.2+, MySQL 5.7+, Composer 2, Node (for local build only), Git
+  - Hostinger: set PHP 8.3 in hPanel → PHP Configuration
+
+- [ ] 17b. **Upload & install steps** *(30 min)*
+  - Upload zip to `public_html/New-electric/`; extract
+  - Set subdomain document root to `public_html/New-electric/public`
+  - Copy `.env.example` → `.env`; fill DB_DATABASE, DB_USERNAME, DB_PASSWORD, APP_URL
+
+- [ ] 17c. **Post-install commands** *(15 min)*
+  - `php artisan key:generate`
+  - `php artisan migrate --force`
+  - Manual symlink: `ln -s /home/{user}/public_html/New-electric/storage/app/public /home/{user}/public_html/New-electric/public/storage` (exec() disabled on shared hosting)
+  - `php artisan config:cache && php artisan route:cache && php artisan view:cache`
+  - `chmod -R 775 storage bootstrap/cache`
+
+- [ ] 17d. **Verification checklist** *(15 min)*
+  - Visit `/` → home loads with animation
+  - Visit `/admin` → Filament login screen
+  - Add product to cart → badge updates
+  - Place test COD order → success page; check admin Orders → order present; stock decremented
+  - Visit `/sitemap.xml` → valid XML
+  - **Verify:** Doc is self-contained; a fresh Hostinger deploy following it results in working site
 
 ---
 

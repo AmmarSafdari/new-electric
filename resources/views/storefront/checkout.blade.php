@@ -17,6 +17,13 @@
                     <h2 class="font-black text-gray-900 mb-5 text-lg">Delivery Information</h2>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div class="sm:col-span-2">
+                            <label class="block text-sm font-bold text-gray-700 mb-1.5">Email Address <span class="text-gray-400 font-normal">(optional — to track orders)</span></label>
+                            <input type="email" name="customer_email" value="{{ old('customer_email', session('clerk_user.email')) }}"
+                                class="w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-200 transition-all {{ $errors->has('customer_email') ? 'border-red-400 bg-red-50' : 'border-gray-200 focus:border-amber-400' }}"
+                                placeholder="you@example.com">
+                            @error('customer_email')<p class="text-red-500 text-xs mt-1.5">{{ $message }}</p>@enderror
+                        </div>
+                        <div class="sm:col-span-2">
                             <label class="block text-sm font-bold text-gray-700 mb-1.5">Full Name <span class="text-red-500">*</span></label>
                             <input type="text" name="name" value="{{ old('name') }}" required
                                 class="w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-200 transition-all {{ $errors->has('name') ? 'border-red-400 bg-red-50' : 'border-gray-200 focus:border-amber-400' }}"

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\StorefrontController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +35,18 @@ Route::get('/order/success', function () {
     $order = \App\Models\Order::with('items')->findOrFail($orderId);
     return view('storefront.order-success', compact('order'));
 })->name('order.success');
+
+// Auth (Clerk bridge)
+Route::get('/sign-in', fn () => view('auth.sign-in'))->name('auth.sign-in');
+Route::get('/__clerk-bridge', fn () => view('auth.sign-in'))->name('auth.clerk-bridge');
+Route::post('/auth/clerk-session', [CustomerController::class, 'clerkSession'])->name('auth.clerk-session');
+Route::post('/auth/sign-out', [CustomerController::class, 'signOut'])->name('auth.sign-out');
+
+// Customer dashboard (protected by Clerk session)
+Route::middleware('clerk.auth')->prefix('dashboard')->name('customer.')->group(function () {
+    Route::get('/', [CustomerController::class, 'dashboard'])->name('dashboard');
+    Route::get('/orders', [CustomerController::class, 'orders'])->name('orders');
+});
 
 // Sitemap
 Route::get('/sitemap.xml', function () {

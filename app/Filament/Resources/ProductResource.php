@@ -11,7 +11,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class ProductResource extends Resource
@@ -46,6 +45,7 @@ class ProductResource extends Resource
                     ->searchable()
                     ->nullable(),
             ])->columns(2),
+
             Forms\Components\Section::make('Pricing & Stock')->schema([
                 Forms\Components\TextInput::make('price')
                     ->required()
@@ -60,6 +60,22 @@ class ProductResource extends Resource
                 Forms\Components\Toggle::make('is_featured')
                     ->label('Featured Product'),
             ])->columns(2),
+
+            Forms\Components\Section::make('🔥 Flash Sale')->schema([
+                Forms\Components\Toggle::make('is_on_sale')
+                    ->label('Enable Flash Sale')
+                    ->live()
+                    ->columnSpanFull(),
+                Forms\Components\TextInput::make('sale_price')
+                    ->label('Sale Price')
+                    ->numeric()
+                    ->prefix('PKR')
+                    ->visible(fn (Forms\Get $get) => $get('is_on_sale')),
+                Forms\Components\DateTimePicker::make('sale_ends_at')
+                    ->label('Sale Ends At')
+                    ->visible(fn (Forms\Get $get) => $get('is_on_sale')),
+            ])->columns(2),
+
             Forms\Components\Section::make('Description & Specs')->schema([
                 Forms\Components\RichEditor::make('description')
                     ->columnSpanFull(),
@@ -67,6 +83,7 @@ class ProductResource extends Resource
                     ->label('Specifications')
                     ->columnSpanFull(),
             ]),
+
             Forms\Components\Section::make('Images')->schema([
                 Forms\Components\FileUpload::make('images')
                     ->multiple()
@@ -90,6 +107,18 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('sku')->searchable(),
                 Tables\Columns\TextColumn::make('category.name')->badge()->sortable(),
                 Tables\Columns\TextColumn::make('price')->money('PKR')->sortable(),
+                Tables\Columns\TextColumn::make('sale_price')
+                    ->money('PKR')
+                    ->label('Sale Price')
+                    ->color('danger')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\IconColumn::make('is_on_sale')->boolean()->label('🔥 Sale'),
+                Tables\Columns\TextColumn::make('sale_ends_at')
+                    ->dateTime('d M y H:i')
+                    ->label('Sale Ends')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('stock_qty')->label('Stock')->sortable(),
                 Tables\Columns\IconColumn::make('is_featured')->boolean()->label('Featured'),
             ])
@@ -100,6 +129,8 @@ class ProductResource extends Resource
                 Tables\Filters\SelectFilter::make('brand_id')
                     ->label('Brand')
                     ->relationship('brand', 'name'),
+                Tables\Filters\TernaryFilter::make('is_on_sale')
+                    ->label('Flash Sale'),
             ])
             ->actions([Tables\Actions\EditAction::make()])
             ->bulkActions([Tables\Actions\BulkActionGroup::make([Tables\Actions\DeleteBulkAction::make()])]);

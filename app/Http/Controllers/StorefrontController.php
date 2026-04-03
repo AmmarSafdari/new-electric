@@ -13,7 +13,20 @@ class StorefrontController extends Controller
     {
         $categories = Category::withCount('products')->get();
         $featured   = Product::where('is_featured', true)->with('category')->take(4)->get();
-        return view('storefront.home', compact('categories', 'featured'));
+        $flashSale  = Product::where('is_on_sale', true)
+            ->where(function ($q) {
+                $q->whereNull('sale_ends_at')->orWhere('sale_ends_at', '>', now());
+            })
+            ->with('category')
+            ->take(4)
+            ->get();
+        $flashSaleEnd = \Carbon\Carbon::parse(
+            Product::where('is_on_sale', true)
+                ->whereNotNull('sale_ends_at')
+                ->where('sale_ends_at', '>', now())
+                ->min('sale_ends_at') ?? now()->addHours(24)
+        );
+        return view('storefront.home', compact('categories', 'featured', 'flashSale', 'flashSaleEnd'));
     }
 
     public function category(string $slug)

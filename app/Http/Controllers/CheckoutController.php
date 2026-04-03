@@ -28,11 +28,12 @@ class CheckoutController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'    => 'required|max:100',
-            'phone'   => ['required', 'regex:/^(\+92|03)\d{9}$/'],
-            'city'    => 'required|max:100',
-            'address' => 'required|max:300',
-            'notes'   => 'nullable|max:500',
+            'name'           => 'required|max:100',
+            'customer_email' => 'nullable|email|max:150',
+            'phone'          => ['required', 'regex:/^(\+92|03)\d{9}$/'],
+            'city'           => 'required|max:100',
+            'address'        => 'required|max:300',
+            'notes'          => 'nullable|max:500',
         ]);
 
         $items = $this->cart->items();
@@ -46,8 +47,12 @@ class CheckoutController extends Controller
 
         $orderId = null;
         DB::transaction(function () use ($request, $items, $subtotal, $shipping, $total, &$orderId) {
+            // Pre-fill email from Clerk session if signed in
+            $clerkEmail = session('clerk_user.email');
+
             $order = Order::create([
                 'name'           => $request->name,
+                'customer_email' => $request->customer_email ?? $clerkEmail,
                 'phone'          => $request->phone,
                 'city'           => $request->city,
                 'address'        => $request->address,

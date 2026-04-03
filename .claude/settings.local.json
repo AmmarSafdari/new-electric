@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(cmd.exe:*)"
+      "Bash(cmd.exe:*)",
+      "Bash(cd:*)",
+      "Bash(curl:*)",
+      "WebFetch(domain:www.sogohomestore.pk)"
     ]
   }
 }

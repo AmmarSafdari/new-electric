@@ -19,6 +19,7 @@ class CategorySeeder extends Seeder
             ['name' => 'Bulbs & Lights', 'description' => 'LED bulbs, tube lights, and energy-saving lights'],
             ['name' => 'Emergency Lights', 'description' => 'Rechargeable emergency and backup lights'],
             ['name' => 'Wires', 'description' => 'Electrical wires, cables, and conduits'],
+            ['name' => 'Heaters', 'description' => 'Electric room heaters and fan heaters for winter'],
         ];
 
         foreach ($categories as $cat) {
