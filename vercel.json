@@ -1,18 +1,6 @@
 {
-  "framework": "laravel",
+  "buildCommand": "composer install && npm ci && npm run build",
   "outputDirectory": "public",
-  "env": {
-    "APP_KEY": "@APP_KEY",
-    "APP_ENV": "@APP_ENV",
-    "APP_DEBUG": "@APP_DEBUG",
-    "DB_CONNECTION": "@DB_CONNECTION",
-    "DB_HOST": "@DB_HOST",
-    "DB_PORT": "@DB_PORT",
-    "DB_DATABASE": "@DB_DATABASE",
-    "DB_USERNAME": "@DB_USERNAME",
-    "DB_PASSWORD": "@DB_PASSWORD"
-  },
-  "buildCommand": "composer install && npm install && npm run build",
   "devCommand": "npm run dev",
   "crons": [
     {
